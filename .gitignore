@@ -1,0 +1,4 @@
+node_modules
+.devcontainer/db
+.serverless
+package-lock.json

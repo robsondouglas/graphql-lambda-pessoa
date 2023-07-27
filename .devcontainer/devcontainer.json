@@ -1,0 +1,8 @@
+{
+    "name": "CIDADAO    ",
+    "dockerComposeFile": "docker-compose.yml",
+    "service": "source",
+    "workspaceFolder": "/workspace/source",
+    "shutdownAction": "stopCompose"
+}
+    

@@ -1,0 +1,57 @@
+extend schema @link(url: "https://specs.apollo.dev/federation/v2.0", import: ["@key"])
+type Cidadao @key(fields: "IdCidadao") 
+{
+    "Identificador do cidadão"
+    IdCidadao: String,
+    "Nome do cidadão"
+    Nome: String,
+    "Email do cidadão"
+    Email: String,
+    "Data de nascimento do cidadão"
+    Nascimento: Float,
+    "Registro da habilitação do cidadão"
+    CNH: String,
+    "Sexo do cidadão (Masculino/Feminino)"
+    Sexo: String,
+    "Lista de telefones"
+    Telefones: [String],
+    "Status de Ativo/Inativo"
+    Status: String,
+    "Data de inclusão"
+    DateAdd: Float
+}
+
+type Query{
+    "Lista todos os cidadãos"
+    cidadaos(Page: Int, Nome: String): [Cidadao],
+    "Obtem os dados do cidadão"
+    cidadao(Id: String):  Cidadao,
+     
+}
+
+type Mutation{
+    "Inclui um cidadão"
+    addCidadao(itm:CidadaoInput):Boolean,
+    "Bloqueia/Desbloqueia um cidadão"
+    toggleCidadao(IdCidadao:String):Boolean
+}
+
+input CidadaoInput
+{
+    "Nome do cidadão"
+    Nome: String,
+    "Data de nascimento do cidadão"
+    Nascimento: Int,
+    "Registro da habilitação do cidadão"
+    CNH: String,
+    "Sexo do cidadão (Masculino/Feminino)"
+    Sexo: String,
+    "Lista de telefones"
+    Telefones: [String],
+    "Lista de emails"
+    Emails: [String],
+    "Status de Ativo/Inativo"
+    Status: String,
+    "Data de inclusão"
+    DateAdd: Int  
+}
