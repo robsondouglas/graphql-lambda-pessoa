@@ -18,9 +18,9 @@ describe('CIDADAO', ()=>{
     }
 
     it('ADD', async()=>{
-        await ctx.transaction(async()=>{
+        await ctx.transaction(async()=> {
             const itm : IRequestAdd = { Email: `add_${randomUUID()}@teste.com`, Nascimento: new Date(), Nome: 'TESTE', Sexo: 'M', CNH: '123456789' };
-            await checkValidation(itm);        
+            await checkValidation(itm);
             await expect(cidadao.add({...itm, Nascimento: new Date(1980,7,12)})).resolves.not.toThrow();
         })
     });

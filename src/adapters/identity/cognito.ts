@@ -23,7 +23,7 @@ export default class Cognito implements IIdentity{
         
         const input:AdminCreateUserCommandInput = { 
             UserPoolId: this.userPoolId, 
-            Username: usr.Email,             
+            Username: usr.Email,
             UserAttributes: [ 
               {  Name: "name",  Value: usr.Nome }
             ],

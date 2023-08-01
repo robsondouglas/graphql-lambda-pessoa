@@ -17,8 +17,7 @@ export interface IRequestAdd extends IStatus {
     Nascimento: Date,
     CNH: string
     Sexo: Sexo,
-    Telefones?: string[],
-    DateAdd?: Date    
+    Telefones?: string[]  
 }
 
 export interface IMulta{

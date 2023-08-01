@@ -10,7 +10,7 @@ export class Cidadao extends Base{
         super('cidadao', context)
     }
 
-    private validate(data:IRequestAdd){
+    private validate(data: IRequestAdd){
         const now = new Date()
         
         if(!data.Email)
@@ -27,7 +27,7 @@ export class Cidadao extends Base{
         
     }
 
-    async add(data:IRequestAdd):Promise<IPK>{
+    async add(data:  IRequestAdd):Promise<IPK>{
         this.validate(data)
         const {insertedId} = await this.run(coll => coll.insertOne({...data, DateAdd: new Date(), Status: 'A'}));
         return { IdCidadao: insertedId.toString()  }

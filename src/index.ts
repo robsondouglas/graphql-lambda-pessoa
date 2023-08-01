@@ -13,7 +13,7 @@ export const graphqlHandler = {
   handler: `${handlerPath(__dirname)}/handlers/graphql.server`,
   description: "Graphql API", 
   memorySize: 128,
-  timeout: 3,
+  timeout: 5,
   events: [
     { httpApi: {path: '/', method: 'POST', ...auth} },
     { httpApi: {path: '/', method: 'GET', ...auth} }

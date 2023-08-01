@@ -9,12 +9,12 @@ export default class App{
     constructor(private ctx: Context, private cidadao:Cidadao, private topic: ITopic, private identity:IIdentity){
     }
 
-    readCidadao(key:IPK){
-        return this.ctx.transaction(()=> this.cidadao.get(key));
+    async readCidadao(key:IPK){
+        return await this.ctx.transaction(()=> this.cidadao.get(key));
     }
 
-    listCidadaos(filter:IFilter){
-        return this.ctx.transaction(()=> this.cidadao.search(filter));
+    async listCidadaos(filter:IFilter){
+        return await this.ctx.transaction(()=> this.cidadao.search(filter));
     }
 
     async addCidadao(itm:IRequestAdd){
@@ -28,8 +28,8 @@ export default class App{
         });
     }
 
-    toggleCidadao(key:IPK){
-        return this.ctx.transaction(async()=> {
+    async toggleCidadao(key:IPK){
+        return await this.ctx.transaction(async()=> {
             const Status = await this.cidadao.toggle(key)
             await this.topic.publish(process.env.TOPIC_CIDADAO, 'TOGGLED', {...key, Status})
             return Status;

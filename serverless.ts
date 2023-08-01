@@ -12,7 +12,7 @@ const args = (key:string, defaultValue:string) =>  {
   }
 }
 
-const accountId = '8133-9794-5060';
+const accountId = 813397945060;
 const service   = {alias: "CID", name: 'Cidadao' }
 const stage     =  args('stage', 'dev').toUpperCase();
 const region    = "sa-east-1";
@@ -42,7 +42,7 @@ const serverlessConfiguration: AWS = {
       MONGO_URL: mongoServers[stage],
       MONGO_DB: `${service.alias}_CIDADAO_${stage}`,
       STAGE: stage,
-      TOPIC_CIDADAO: topics.cidadao.name,
+      TOPIC_CIDADAO: `arn:aws:sns:${region}:${accountId}:${topics.cidadao.name}`,
       AWS_NODEJS_CONNECTION_REUSE_ENABLED: '1',
       NODE_OPTIONS: '--enable-source-maps --stack-trace-limit=1000',
     },
@@ -62,7 +62,12 @@ const serverlessConfiguration: AWS = {
             Effect: "Allow",
             Action: ["ses:*"],
             Resource: ["arn:aws:ses:*:" + accountId + ":*"]
-         }
+         },
+         { 
+          Effect: "Allow",
+          Action: ["cognito-idp:AdminCreateUser"],
+          Resource: [`arn:aws:cognito-idp:${region}:${accountId}:*`]
+       }
         ]
       }
     }

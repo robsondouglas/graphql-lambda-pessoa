@@ -40,18 +40,14 @@ input CidadaoInput
 {
     "Nome do cidadão"
     Nome: String,
+    "Email do cidadão e que será usado como login"
+    Email:String,
     "Data de nascimento do cidadão"
-    Nascimento: Int,
+    Nascimento: Float,
     "Registro da habilitação do cidadão"
     CNH: String,
     "Sexo do cidadão (Masculino/Feminino)"
     Sexo: String,
     "Lista de telefones"
     Telefones: [String],
-    "Lista de emails"
-    Emails: [String],
-    "Status de Ativo/Inativo"
-    Status: String,
-    "Data de inclusão"
-    DateAdd: Int  
 }

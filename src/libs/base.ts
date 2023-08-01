@@ -15,14 +15,37 @@ export class Context{
     }
 
     
-    public run = (tableName: string, hnd: (coll:Collection) => Promise<any>) => hnd(this.client.db(this.databaseName).collection(tableName));
+    public run = async (tableName: string, hnd: (coll:Collection) => Promise<any>) => {
+        try{
+            console.log('Running...')
+            const res = await hnd(this.client.db(this.databaseName).collection(tableName))
+            console.log('OK')
+            return res;
+        }
+        catch(ex)
+        { 
+            console.log('Erro...') 
+            throw ex;
+        }
+    };
     
     public async transaction<T>(dlg:()=>Promise<T>):Promise<T>{
+        console.log("Conectando...")
         await this.client.connect();
         try
-        { return await dlg() }
+        { 
+            console.log("Conectado!")        
+            return await dlg() 
+        }
+        catch(ex){
+            console.error('ERRO ::: ', ex);
+            throw ex;
+        }
         finally
-        { await this.client.close() }
+        { 
+            await this.client.close() 
+            console.log("Deconectado!")
+        }
     }
 
 }
@@ -32,5 +55,5 @@ export abstract class Base{
     constructor(protected tableName: string, private context:Context){
     }
 
-    protected run = (hnd: (coll:Collection) => Promise<any>) => this.context.run(this.tableName, hnd);  
+    protected run = async (hnd: (coll:Collection) => Promise<any>) => await this.context.run(this.tableName, hnd);  
 }
