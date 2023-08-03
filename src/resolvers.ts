@@ -1,7 +1,7 @@
 const resolvers = ({
     Query: {
-        cidadaos: (_, { Page, Nome }, { dataSources }) => dataSources.app.listCidadaos({ Page, Nome }).then(res => res.map(({ Nascimento, DateAdd, ...m }) => ({ ...m, Nascimento: Nascimento.valueOf(), DateAdd: DateAdd.valueOf() }))),
-        cidadao: (_, { Id }, { dataSources }) => dataSources.app.readCidadao({ IdCidadao: Id }),
+        cidadaos: async(_, { Page, Nome }, { dataSources }) => await dataSources.app.listCidadaos({ Page, Nome }).then(res => res.map(({ Nascimento, DateAdd, ...m }) => ({ ...m, Nascimento: Nascimento.valueOf(), DateAdd: DateAdd.valueOf() }))),
+        cidadao: async(_, { IdCidadao }, { dataSources }) => await dataSources.app.getCidadao({ IdCidadao }),
     },
 
     Mutation: {
@@ -10,8 +10,9 @@ const resolvers = ({
     },
 
     Cidadao: {
-        __resolveReference: ({ IdCidadao }, { dataSources }) => dataSources.app.get({ IdCidadao }),
-    }
+        __resolveReference: async({IdCidadao}, {dataSources}) => await dataSources.app.findCidadao({ IdUsuario: IdCidadao }) 
+    },
+
 })
 
 export default resolvers;

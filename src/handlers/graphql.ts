@@ -18,7 +18,7 @@ const dbCtx = new Context(process.env.MONGO_URL, process.env.MONGO_DB);
 
 const cidadao = new Cidadao(dbCtx);
 const topic = DEV_MODE ? new TopickMocked() : new SNS();
-const identity = DEV_MODE ? new IdentityMocked() : new Cognito('sa-east-1_28VaLNwAP', '7joob4d238qo57i2gdmnkpava2');
+const identity = DEV_MODE ? new IdentityMocked() : new Cognito([`https://cognito-idp.sa-east-1.amazonaws.com/${process.env.cognitoPoolId}`]);
 const app = new App(dbCtx, cidadao, topic, identity)
 //----------------------------------------- 
 
@@ -32,8 +32,12 @@ if(DEV_MODE)
 { console.log("RODANDO EM MODO DE DESENVOLVIMENTO!!!!") }
 
 const typeDefs = gql(ql);
-const context = async () => ({ dataSources: { app } })
-
+const context = async({event}) =>  { 
+    const [_, data] = event.headers?.authorization?.split(' ').at(1)?.split('.') || [];
+    const claims = data ? JSON.parse( Buffer.from(data, 'base64').toString('ascii') ) : {};
+       
+    return ({ claims, dataSources: { app  } })
+}
 const srv = new ApolloServer({ context, introspection, schema: buildSubgraphSchema({ typeDefs, resolvers }) });
 export const server = srv.createHandler()
 //----------------------------------------- 

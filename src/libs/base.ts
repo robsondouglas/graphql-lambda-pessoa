@@ -14,24 +14,23 @@ export class Context{
         });
     }
 
+    public run = async (tableName: string, hnd: (coll:Collection) => Promise<any>) => await hnd(this.client.db(this.databaseName).collection(tableName));
     
-    public run = async (tableName: string, hnd: (coll:Collection) => Promise<any>) => {
-        try{
-            console.log('Running...')
-            const res = await hnd(this.client.db(this.databaseName).collection(tableName))
-            console.log('OK')
-            return res;
-        }
-        catch(ex)
-        { 
-            console.log('Erro...') 
-            throw ex;
-        }
-    };
-    
+    private static counter = 0;
     public async transaction<T>(dlg:()=>Promise<T>):Promise<T>{
-        console.log("Conectando...")
-        await this.client.connect();
+        
+        await new Promise<void>(async(resolve, reject) =>{
+            try{
+                if(Context.counter == 0){
+                    console.log("Conectando...")
+                    await this.client.connect();
+                    Context.counter++
+                }
+                resolve();
+            }
+            catch(ex){ reject(ex) }
+        });
+
         try
         { 
             console.log("Conectado!")        
@@ -43,8 +42,18 @@ export class Context{
         }
         finally
         { 
-            await this.client.close() 
-            console.log("Deconectado!")
+            await new Promise<void>(async(resolve, reject) =>{
+                try{
+                    Context.counter--;
+                    if(Context.counter == 0)
+                    {
+                        await this.client.close() 
+                        console.log("Deconectado!")
+                    }
+                    resolve();
+                }
+                catch(ex){ reject(ex) }
+            });
         }
     }
 

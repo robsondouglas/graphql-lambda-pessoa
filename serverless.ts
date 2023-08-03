@@ -16,6 +16,7 @@ const accountId = 813397945060;
 const service   = {alias: "CID", name: 'Cidadao' }
 const stage     =  args('stage', 'dev').toUpperCase();
 const region    = "sa-east-1";
+const cognitoPoolId = 'sa-east-1_lK1q4kfO6';
 const mongoServers = {
   DEV: 'mongodb://mongoadmin:secret@db/', 
   HMG: 'mongodb+srv://suitapp:ymwwXjD4KeFHvg8W@suitapp.dlmxxtl.mongodb.net/?retryWrites=true&w=majority', 
@@ -26,12 +27,31 @@ const topics = {
   cidadao: {key: 'topMulta', name: `${service.alias}_CIDADAO_TOP_${stage}`},
 };
 
+const Apps = {
+  Agente: '1smc1s7c4ktbre5a5ijqcuskkq',
+  Admin: '3qtrdb222hhnc5a1d36qsjmpkb',
+  Cidadao: 'bbvm4gnh4gllju7f4bdepdioh'
+}
+
+
 const serverlessConfiguration: AWS = {
   service: service.name,
   frameworkVersion: '3',
   plugins: ['serverless-esbuild', 'serverless-offline'],
   provider: {
     name: 'aws',
+    httpApi: {
+      cors: { allowedOrigins: ['*'], allowedHeaders: ['Content-Type', 'Authorization'], allowedMethods: ['POST'], /*allowCredentials: true*/ },
+      authorizers: {
+        auth: {
+          type: 'jwt',
+          identitySource: '$request.header.Authorization',
+          issuerUrl: `https://cognito-idp.sa-east-1.amazonaws.com/${cognitoPoolId}`,
+          audience: [Apps.Admin, Apps.Agente, Apps.Cidadao],
+          
+        }
+      }
+    },
     region,
     runtime: 'nodejs18.x',
     apiGateway: {
@@ -41,6 +61,7 @@ const serverlessConfiguration: AWS = {
     environment: {
       MONGO_URL: mongoServers[stage],
       MONGO_DB: `${service.alias}_CIDADAO_${stage}`,
+      cognitoPoolId,
       STAGE: stage,
       TOPIC_CIDADAO: `arn:aws:sns:${region}:${accountId}:${topics.cidadao.name}`,
       AWS_NODEJS_CONNECTION_REUSE_ENABLED: '1',

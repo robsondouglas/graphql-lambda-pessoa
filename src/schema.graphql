@@ -1,4 +1,4 @@
-extend schema @link(url: "https://specs.apollo.dev/federation/v2.0", import: ["@key"])
+extend schema @link(url: "https://specs.apollo.dev/federation/v2.0", import: ["@key", "@external"])
 type Cidadao @key(fields: "IdCidadao") 
 {
     "Identificador do cidadão"
@@ -21,11 +21,13 @@ type Cidadao @key(fields: "IdCidadao")
     DateAdd: Float
 }
 
+
+
 type Query{
     "Lista todos os cidadãos"
     cidadaos(Page: Int, Nome: String): [Cidadao],
     "Obtem os dados do cidadão"
-    cidadao(Id: String):  Cidadao,
+    cidadao(IdCidadao: String):  Cidadao,
      
 }
 

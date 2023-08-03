@@ -8,10 +8,12 @@ export interface IPK{
     IdCidadao:string
 }
 
+export interface IFK{
+    IdUsuario:string
+}
 
 
-export interface IRequestAdd extends IStatus {
-    IdUsuario?:string
+export interface IRequestAdd extends IStatus, IFK {
     Email:string,
     Nome:string,
     Nascimento: Date,

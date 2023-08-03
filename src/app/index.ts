@@ -1,6 +1,6 @@
 import ITopic from "src/adapters/topic/models";
 import { Cidadao } from "./cidadao";
-import { IFilter, IPK, IRequestAdd } from "./cidadao/models";
+import { IFK, IFilter, IPK, IRequestAdd } from "./cidadao/models";
 import { IIdentity } from "src/adapters/identity/models";
 import { Context } from "src/libs/base";
 
@@ -9,8 +9,12 @@ export default class App{
     constructor(private ctx: Context, private cidadao:Cidadao, private topic: ITopic, private identity:IIdentity){
     }
 
-    async readCidadao(key:IPK){
+    async getCidadao(key:IPK){
         return await this.ctx.transaction(()=> this.cidadao.get(key));
+    }
+
+    async findCidadao(key:IFK){
+        return await this.ctx.transaction(()=> this.cidadao.find(key));
     }
 
     async listCidadaos(filter:IFilter){

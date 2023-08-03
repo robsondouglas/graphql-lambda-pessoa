@@ -1,5 +1,5 @@
 import MESSAGES from "../../libs/messages";
-import { IFilter, IPK, IRequestAdd, IResponseGet, IStatus } from "./models";
+import { IFK, IFilter, IPK, IRequestAdd, IResponseGet, IStatus } from "./models";
 import {ObjectId} from 'mongodb'
 import { getAge } from "../../libs/utils";
 import { Base, Context } from "../../libs/base";
@@ -44,6 +44,17 @@ export class Cidadao extends Base{
 
     async get(uk:IPK):Promise<IResponseGet>{
         const itm =  await this.run(coll => coll.findOne({ _id: new ObjectId(uk.IdCidadao), Status: { '$ne': 'C' } }));
+        if(itm){
+            const {_id, ...res } = itm;
+            return {IdCidadao: _id.toString(), ...res};
+        }
+        else{
+            return null;
+        }
+    }
+
+    async find(fk:IFK):Promise<IResponseGet>{
+        const itm =  await this.run(coll => coll.findOne({ IdUsuario: fk.IdUsuario, Status: { '$ne': 'C' } }));
         if(itm){
             const {_id, ...res } = itm;
             return {IdCidadao: _id.toString(), ...res};
